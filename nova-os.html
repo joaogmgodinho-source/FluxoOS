@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FluxoOS - Nova Ordem de Serviço</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h2>FluxoOS</h2>
+
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="nova-os.html">Nova OS</a>
+        <a href="index.html">Sair</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Cadastrar Nova Ordem de Serviço</h1>
+
+      <form class="form-os" id="formOS">
+        <!-- IDENTIFICAÇÃO -->
+        <h2 style="color: #1f3a5f; margin-bottom: 15px">Identificação da OS</h2>
+
+        <div class="form-row">
+          <div>
+            <label>Número da OS</label>
+            <input type="text" id="numero" required />
+          </div>
+
+          <div>
+            <label>Data de Entrada</label>
+            <input type="date" id="dataEntrada" required />
+          </div>
+        </div>
+
+        <!-- CLIENTE -->
+        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Dados do Cliente</h2>
+
+        <div class="form-row">
+          <div>
+            <label>Nome do Cliente / Empresa</label>
+            <input type="text" id="cliente" required />
+          </div>
+
+          <div>
+            <label>Responsável</label>
+            <input type="text" id="responsavel" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label>Telefone</label>
+            <input type="text" id="telefone" />
+          </div>
+
+          <div>
+            <label>E-mail</label>
+            <input type="email" id="email" />
+          </div>
+        </div>
+
+        <!-- VEÍCULO -->
+        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Dados do Veículo</h2>
+
+        <div class="form-row">
+          <div>
+            <label>Placa</label>
+            <input type="text" id="placa" required />
+          </div>
+
+          <div>
+            <label>Marca do Caminhão</label>
+            <select id="marca">
+              <option>Mercedes-Benz</option>
+              <option>Volvo</option>
+              <option>Scania</option>
+              <option>Iveco</option>
+              <option>Volkswagen</option>
+              <option>Ford</option>
+              <option>DAF</option>
+              <option>Outra</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label>Modelo da Carroceria</label>
+            <select id="carroceria">
+              <option>Baú Refrigerado</option>
+              <option>Baú Seco</option>
+              <option>Sider</option>
+              <option>Plataforma</option>
+              <option>Câmara Fria</option>
+              <option>Outro</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Prioridade</label>
+            <select id="prioridade">
+              <option>Baixa</option>
+              <option>Média</option>
+              <option>Alta</option>
+              <option>Urgente</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- SERVIÇO -->
+        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Serviço Solicitado</h2>
+
+        <div class="form-row">
+          <div>
+            <label>Tipo de Serviço</label>
+            <select id="servico">
+              <option>Reforma Completa</option>
+              <option>Reforma Parcial</option>
+              <option>Pintura</option>
+              <option>Refrigeração</option>
+              <option>Troca de Piso</option>
+              <option>Troca de Painel</option>
+              <option>Vedação</option>
+              <option>Outro</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Status Inicial</label>
+            <select id="status">
+              <option>Recebido</option>
+              <option>Em Triagem</option>
+              <option>Em Orçamento</option>
+              <option>Aguardando Aprovação</option>
+              <option>Liberado para Oficina</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- CHECKLIST -->
+        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Checklist Inicial</h2>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+          "
+        >
+          <label><input type="checkbox" /> Amassado lateral</label>
+
+          <label><input type="checkbox" /> Dano no teto</label>
+
+          <label><input type="checkbox" /> Piso danificado</label>
+
+          <label><input type="checkbox" /> Porta traseira com problema</label>
+
+          <label><input type="checkbox" /> Vazamento</label>
+
+          <label><input type="checkbox" /> Isolamento comprometido</label>
+        </div>
+
+        <!-- OBSERVAÇÕES -->
+        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Observações</h2>
+
+        <label>Descrição do problema</label>
+
+        <textarea
+          id="observacoes"
+          rows="6"
+          placeholder="Descreva os danos observados, necessidades do cliente e outras informações importantes."
+        ></textarea>
+
+        <div style="margin-top: 30px; display: flex; gap: 15px">
+          <button type="button" class="btn-primary" onclick="salvarOS()">
+            Salvar Ordem de Serviço
+          </button>
+
+          <a
+            href="dashboard.html"
+            class="btn-primary"
+            style="
+              text-decoration: none;
+              text-align: center;
+              background: #6b7280;
+            "
+          >
+            Cancelar
+          </a>
+        </div>
+      </form>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

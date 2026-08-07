@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FluxoOS - Detalhes da OS</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h2>FluxoOS</h2>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="nova-os.html">Nova OS</a>
+        <a href="index.html">Sair</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Detalhes da Ordem de Serviço</h1>
+
+      <div class="box">
+        <p><strong>OS:</strong> <span id="dNumero"></span></p>
+        <p><strong>Cliente:</strong> <span id="dCliente"></span></p>
+        <p><strong>Responsável:</strong> <span id="dResponsavel"></span></p>
+        <p><strong>Telefone:</strong> <span id="dTelefone"></span></p>
+        <p><strong>E-mail:</strong> <span id="dEmail"></span></p>
+        <p><strong>Placa:</strong> <span id="dPlaca"></span></p>
+        <p><strong>Marca:</strong> <span id="dMarca"></span></p>
+        <p><strong>Carroceria:</strong> <span id="dCarroceria"></span></p>
+        <p><strong>Serviço:</strong> <span id="dServico"></span></p>
+        <p><strong>Prioridade:</strong> <span id="dPrioridade"></span></p>
+        <p><strong>Data de Entrada:</strong> <span id="dData"></span></p>
+
+        <hr style="margin: 20px 0" />
+
+        <p><strong>Observações:</strong></p>
+        <p id="dObservacoes"></p>
+      </div>
+
+      <div class="box">
+        <h2 style="margin-bottom: 15px; color: #1f3a5f">Alterar Status</h2>
+
+        <select id="novoStatus">
+          <option>Recebido</option>
+          <option>Em Triagem</option>
+          <option>Em Orçamento</option>
+          <option>Aguardando Aprovação</option>
+          <option>Liberado para Oficina</option>
+        </select>
+
+        <br /><br />
+
+        <button class="btn-primary" onclick="atualizarStatusOS()">
+          Atualizar Status
+        </button>
+      </div>
+
+      <a
+        href="dashboard.html"
+        class="btn-primary"
+        style="text-decoration: none"
+      >
+        Voltar ao Dashboard
+      </a>
+    </main>
+
+    <script src="script.js"></script>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        const id = Number(localStorage.getItem("osSelecionada"));
+
+        const lista = obterOrdens();
+
+        const os = lista.find((item) => item.id === id);
+
+        if (!os) {
+          alert("OS não encontrada.");
+          window.location.href = "dashboard.html";
+          return;
+        }
+
+        document.getElementById("dNumero").textContent = os.numero;
+        document.getElementById("dCliente").textContent = os.cliente;
+        document.getElementById("dResponsavel").textContent = os.responsavel;
+        document.getElementById("dTelefone").textContent = os.telefone;
+        document.getElementById("dEmail").textContent = os.email;
+        document.getElementById("dPlaca").textContent = os.placa;
+        document.getElementById("dMarca").textContent = os.marca;
+        document.getElementById("dCarroceria").textContent = os.carroceria;
+        document.getElementById("dServico").textContent = os.servico;
+        document.getElementById("dPrioridade").textContent = os.prioridade;
+        document.getElementById("dData").textContent = os.dataEntrada;
+        document.getElementById("dObservacoes").textContent =
+          os.observacoes || "-";
+
+        document.getElementById("novoStatus").value = os.status;
+      });
+    </script>
+  </body>
+</html>

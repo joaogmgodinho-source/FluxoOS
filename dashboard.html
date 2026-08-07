@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FluxoOS - Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h2>FluxoOS</h2>
+
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="nova-os.html">Nova OS</a>
+        <a href="index.html">Sair</a>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Painel de Ordens de Serviço</h1>
+
+      <!-- CARDS -->
+      <div class="cards">
+        <div class="card">
+          <h3 id="recebidoCount">0</h3>
+          <p>Recebidas</p>
+        </div>
+
+        <div class="card">
+          <h3 id="triagemCount">0</h3>
+          <p>Em Triagem</p>
+        </div>
+
+        <div class="card">
+          <h3 id="orcamentoCount">0</h3>
+          <p>Em Orçamento</p>
+        </div>
+
+        <div class="card">
+          <h3 id="aprovacaoCount">0</h3>
+          <p>Aguardando Aprovação</p>
+        </div>
+
+        <div class="card">
+          <h3 id="liberadoCount">0</h3>
+          <p>Liberadas para Oficina</p>
+        </div>
+      </div>
+
+      <!-- PESQUISA -->
+      <div class="box">
+        <h2 style="margin-bottom: 15px; color: #1f3a5f">
+          Buscar Ordem de Serviço
+        </h2>
+
+        <input
+          type="text"
+          id="pesquisaOS"
+          placeholder="Buscar por número da OS, cliente ou placa..."
+          style="
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+          "
+        />
+      </div>
+
+      <!-- TABELA -->
+      <table>
+        <thead>
+          <tr>
+            <th>OS</th>
+            <th>Cliente</th>
+            <th>Placa</th>
+            <th>Serviço</th>
+            <th>Prioridade</th>
+            <th>Status</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+
+        <tbody id="tabelaOS">
+          <!-- O JavaScript irá adicionar as OS aqui -->
+        </tbody>
+      </table>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
