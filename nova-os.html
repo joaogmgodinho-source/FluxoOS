@@ -1,201 +1,525 @@
 <!doctype html>
 <html lang="pt-BR">
+
   <head>
+
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
     <title>FluxoOS - Nova Ordem de Serviço</title>
-    <link rel="stylesheet" href="style.css" />
+
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+
   </head>
+
+
   <body>
+
     <header>
+
       <h2>FluxoOS</h2>
 
       <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="nova-os.html">Nova OS</a>
-        <a href="index.html">Sair</a>
+
+        <a href="dashboard.html">
+          Dashboard
+        </a>
+
+        <a href="nova-os.html">
+          Nova OS
+        </a>
+
+        <a href="index.html" onclick="sair()">
+          Sair
+        </a>
+
       </nav>
+
     </header>
 
+
     <main>
-      <h1>Cadastrar Nova Ordem de Serviço</h1>
 
-      <form class="form-os" id="formOS">
+      <div class="page-heading">
+
+        <span class="page-label">
+          NOVO REGISTRO
+        </span>
+
+        <h1>Cadastrar Nova Ordem de Serviço</h1>
+
+        <p class="page-description">
+          Registre os dados do cliente, veículo e serviço solicitado.
+        </p>
+
+      </div>
+
+
+      <form
+        class="form-os"
+        id="formOS"
+        onsubmit="event.preventDefault(); salvarOS();"
+      >
+
         <!-- IDENTIFICAÇÃO -->
-        <h2 style="color: #1f3a5f; margin-bottom: 15px">Identificação da OS</h2>
 
-        <div class="form-row">
-          <div>
-            <label>Número da OS</label>
-            <input type="text" id="numero" required />
+        <section class="form-section">
+
+          <div class="form-section-header">
+
+            <span class="section-number">
+              01
+            </span>
+
+            <div>
+              <h2>Identificação da OS</h2>
+              <p>Informações básicas da ordem.</p>
+            </div>
+
           </div>
 
-          <div>
-            <label>Data de Entrada</label>
-            <input type="date" id="dataEntrada" required />
+
+          <div class="form-row">
+
+            <div>
+              <label for="numero">
+                Número da OS
+              </label>
+
+              <input
+                type="text"
+                id="numero"
+                placeholder="Ex.: OS-1024"
+                required
+              />
+            </div>
+
+
+            <div>
+              <label for="dataEntrada">
+                Data de Entrada
+              </label>
+
+              <input
+                type="date"
+                id="dataEntrada"
+                required
+              />
+            </div>
+
           </div>
-        </div>
+
+        </section>
+
 
         <!-- CLIENTE -->
-        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Dados do Cliente</h2>
 
-        <div class="form-row">
-          <div>
-            <label>Nome do Cliente / Empresa</label>
-            <input type="text" id="cliente" required />
+        <section class="form-section">
+
+          <div class="form-section-header">
+
+            <span class="section-number">
+              02
+            </span>
+
+            <div>
+              <h2>Dados do Cliente</h2>
+              <p>Informações para contato e identificação.</p>
+            </div>
+
           </div>
 
-          <div>
-            <label>Responsável</label>
-            <input type="text" id="responsavel" required />
-          </div>
-        </div>
 
-        <div class="form-row">
-          <div>
-            <label>Telefone</label>
-            <input type="text" id="telefone" />
+          <div class="form-row">
+
+            <div>
+
+              <label for="cliente">
+                Nome do Cliente / Empresa
+              </label>
+
+              <input
+                type="text"
+                id="cliente"
+                placeholder="Nome do cliente ou empresa"
+                required
+              />
+
+            </div>
+
+
+            <div>
+
+              <label for="responsavel">
+                Responsável
+              </label>
+
+              <input
+                type="text"
+                id="responsavel"
+                placeholder="Responsável pelo veículo"
+                required
+              />
+
+            </div>
+
           </div>
 
-          <div>
-            <label>E-mail</label>
-            <input type="email" id="email" />
+
+          <div class="form-row">
+
+            <div>
+
+              <label for="telefone">
+                Telefone
+              </label>
+
+              <input
+                type="tel"
+                id="telefone"
+                placeholder="(00) 00000-0000"
+              />
+
+            </div>
+
+
+            <div>
+
+              <label for="email">
+                E-mail
+              </label>
+
+              <input
+                type="email"
+                id="email"
+                placeholder="cliente@email.com"
+              />
+
+            </div>
+
           </div>
-        </div>
+
+        </section>
+
 
         <!-- VEÍCULO -->
-        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Dados do Veículo</h2>
 
-        <div class="form-row">
-          <div>
-            <label>Placa</label>
-            <input type="text" id="placa" required />
+        <section class="form-section">
+
+          <div class="form-section-header">
+
+            <span class="section-number">
+              03
+            </span>
+
+            <div>
+              <h2>Dados do Veículo</h2>
+              <p>Identificação do caminhão e carroceria.</p>
+            </div>
+
           </div>
 
-          <div>
-            <label>Marca do Caminhão</label>
-            <select id="marca">
-              <option>Mercedes-Benz</option>
-              <option>Volvo</option>
-              <option>Scania</option>
-              <option>Iveco</option>
-              <option>Volkswagen</option>
-              <option>Ford</option>
-              <option>DAF</option>
-              <option>Outra</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="form-row">
-          <div>
-            <label>Modelo da Carroceria</label>
-            <select id="carroceria">
-              <option>Baú Refrigerado</option>
-              <option>Baú Seco</option>
-              <option>Sider</option>
-              <option>Plataforma</option>
-              <option>Câmara Fria</option>
-              <option>Outro</option>
-            </select>
+          <div class="form-row">
+
+            <div>
+
+              <label for="placa">
+                Placa
+              </label>
+
+              <input
+                type="text"
+                id="placa"
+                placeholder="ABC-1234"
+                required
+              />
+
+            </div>
+
+
+            <div>
+
+              <label for="marca">
+                Marca do Caminhão
+              </label>
+
+              <select id="marca">
+
+                <option>Mercedes-Benz</option>
+                <option>Volvo</option>
+                <option>Scania</option>
+                <option>Iveco</option>
+                <option>Volkswagen</option>
+                <option>Ford</option>
+                <option>DAF</option>
+                <option>Outra</option>
+
+              </select>
+
+            </div>
+
           </div>
 
-          <div>
-            <label>Prioridade</label>
-            <select id="prioridade">
-              <option>Baixa</option>
-              <option>Média</option>
-              <option>Alta</option>
-              <option>Urgente</option>
-            </select>
+
+          <div class="form-row">
+
+            <div>
+
+              <label for="carroceria">
+                Modelo da Carroceria
+              </label>
+
+              <select id="carroceria">
+
+                <option>Baú Refrigerado</option>
+                <option>Baú Seco</option>
+                <option>Sider</option>
+                <option>Plataforma</option>
+                <option>Câmara Fria</option>
+                <option>Outro</option>
+
+              </select>
+
+            </div>
+
+
+            <div>
+
+              <label for="prioridade">
+                Prioridade
+              </label>
+
+              <select id="prioridade">
+
+                <option>Baixa</option>
+                <option>Média</option>
+                <option>Alta</option>
+                <option>Urgente</option>
+
+              </select>
+
+            </div>
+
           </div>
-        </div>
+
+        </section>
+
 
         <!-- SERVIÇO -->
-        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Serviço Solicitado</h2>
 
-        <div class="form-row">
-          <div>
-            <label>Tipo de Serviço</label>
-            <select id="servico">
-              <option>Reforma Completa</option>
-              <option>Reforma Parcial</option>
-              <option>Pintura</option>
-              <option>Refrigeração</option>
-              <option>Troca de Piso</option>
-              <option>Troca de Painel</option>
-              <option>Vedação</option>
-              <option>Outro</option>
-            </select>
+        <section class="form-section">
+
+          <div class="form-section-header">
+
+            <span class="section-number">
+              04
+            </span>
+
+            <div>
+              <h2>Serviço Solicitado</h2>
+              <p>Defina o serviço e o estágio inicial.</p>
+            </div>
+
           </div>
 
-          <div>
-            <label>Status Inicial</label>
-            <select id="status">
-              <option>Recebido</option>
-              <option>Em Triagem</option>
-              <option>Em Orçamento</option>
-              <option>Aguardando Aprovação</option>
-              <option>Liberado para Oficina</option>
-            </select>
+
+          <div class="form-row">
+
+            <div>
+
+              <label for="servico">
+                Tipo de Serviço
+              </label>
+
+              <select id="servico">
+
+                <option>Reforma Completa</option>
+                <option>Reforma Parcial</option>
+                <option>Pintura</option>
+                <option>Refrigeração</option>
+                <option>Troca de Piso</option>
+                <option>Troca de Painel</option>
+                <option>Vedação</option>
+                <option>Outro</option>
+
+              </select>
+
+            </div>
+
+
+            <div>
+
+              <label for="status">
+                Status Inicial
+              </label>
+
+              <select id="status">
+
+                <option>Recebido</option>
+                <option>Em Triagem</option>
+                <option>Em Orçamento</option>
+                <option>Aguardando Aprovação</option>
+
+              </select>
+
+            </div>
+
           </div>
-        </div>
+
+        </section>
+
 
         <!-- CHECKLIST -->
-        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Checklist Inicial</h2>
 
-        <div
-          style="
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-          "
-        >
-          <label><input type="checkbox" /> Amassado lateral</label>
+        <section class="form-section">
 
-          <label><input type="checkbox" /> Dano no teto</label>
+          <div class="form-section-header">
 
-          <label><input type="checkbox" /> Piso danificado</label>
+            <span class="section-number">
+              05
+            </span>
 
-          <label><input type="checkbox" /> Porta traseira com problema</label>
+            <div>
+              <h2>Checklist Inicial</h2>
+              <p>Marque os problemas identificados no veículo.</p>
+            </div>
 
-          <label><input type="checkbox" /> Vazamento</label>
+          </div>
 
-          <label><input type="checkbox" /> Isolamento comprometido</label>
-        </div>
+
+          <div class="checklist">
+
+            <label>
+              <input
+                type="checkbox"
+                name="checklist"
+                value="Amassado lateral"
+              />
+              Amassado lateral
+            </label>
+
+
+            <label>
+              <input
+                type="checkbox"
+                name="checklist"
+                value="Dano no teto"
+              />
+              Dano no teto
+            </label>
+
+
+            <label>
+              <input
+                type="checkbox"
+                name="checklist"
+                value="Piso danificado"
+              />
+              Piso danificado
+            </label>
+
+
+            <label>
+              <input
+                type="checkbox"
+                name="checklist"
+                value="Porta traseira com problema"
+              />
+              Porta traseira com problema
+            </label>
+
+
+            <label>
+              <input
+                type="checkbox"
+                name="checklist"
+                value="Vazamento"
+              />
+              Vazamento
+            </label>
+
+
+            <label>
+              <input
+                type="checkbox"
+                name="checklist"
+                value="Isolamento comprometido"
+              />
+              Isolamento comprometido
+            </label>
+
+          </div>
+
+        </section>
+
 
         <!-- OBSERVAÇÕES -->
-        <h2 style="color: #1f3a5f; margin: 25px 0 15px">Observações</h2>
 
-        <label>Descrição do problema</label>
+        <section class="form-section">
 
-        <textarea
-          id="observacoes"
-          rows="6"
-          placeholder="Descreva os danos observados, necessidades do cliente e outras informações importantes."
-        ></textarea>
+          <div class="form-section-header">
 
-        <div style="margin-top: 30px; display: flex; gap: 15px">
-          <button type="button" class="btn-primary" onclick="salvarOS()">
+            <span class="section-number">
+              06
+            </span>
+
+            <div>
+              <h2>Observações</h2>
+              <p>Registre informações adicionais.</p>
+            </div>
+
+          </div>
+
+
+          <label for="observacoes">
+            Descrição do problema
+          </label>
+
+          <textarea
+            id="observacoes"
+            rows="6"
+            placeholder="Descreva os danos observados, necessidades do cliente e outras informações importantes."
+          ></textarea>
+
+        </section>
+
+
+        <!-- BOTÕES -->
+
+        <div class="form-actions">
+
+          <button
+            type="submit"
+            class="btn-primary"
+          >
             Salvar Ordem de Serviço
           </button>
 
+
           <a
             href="dashboard.html"
-            class="btn-primary"
-            style="
-              text-decoration: none;
-              text-align: center;
-              background: #6b7280;
-            "
+            class="btn-secondary"
           >
             Cancelar
           </a>
+
         </div>
+
       </form>
+
     </main>
 
+
     <script src="script.js"></script>
+
   </body>
+
 </html>

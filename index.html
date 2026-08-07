@@ -3,20 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>FluxoOS - Login</title>
+
     <link rel="stylesheet" href="style.css" />
   </head>
+
   <body class="login-body">
+
     <div class="login-container">
+
       <div class="login-card">
+
         <div class="logo-area">
           <h1>FluxoOS</h1>
           <p>Sistema de Controle de Ordens de Serviço</p>
         </div>
 
         <form id="loginForm">
+
           <div class="input-group">
-            <label>Usuário</label>
+            <label for="usuario">Usuário</label>
+
             <input
               type="text"
               id="usuario"
@@ -26,7 +34,8 @@
           </div>
 
           <div class="input-group">
-            <label>Senha</label>
+            <label for="senha">Senha</label>
+
             <input
               type="password"
               id="senha"
@@ -35,33 +44,51 @@
             />
           </div>
 
-          <button type="submit" class="btn-primary">Entrar</button>
+          <button
+            type="submit"
+            class="btn-primary"
+          >
+            Entrar
+          </button>
+
         </form>
 
         <div class="login-footer">
-          <small>Protótipo desenvolvido para o desafio SENAI</small>
+          <small>
+            Protótipo desenvolvido para o desafio SENAI
+          </small>
         </div>
+
       </div>
+
     </div>
 
     <script>
       document
         .getElementById("loginForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault();
+        .addEventListener("submit", function (event) {
 
-          const usuario = document.getElementById("usuario").value.trim();
-          const senha = document.getElementById("senha").value.trim();
+          event.preventDefault();
 
-          if (usuario === "" || senha === "") {
+          const usuario =
+            document.getElementById("usuario").value.trim();
+
+          const senha =
+            document.getElementById("senha").value.trim();
+
+          if (!usuario || !senha) {
             alert("Preencha usuário e senha.");
             return;
           }
 
-          localStorage.setItem("usuarioLogado", usuario);
+          localStorage.setItem(
+            "usuarioLogado",
+            usuario
+          );
 
           window.location.href = "dashboard.html";
         });
     </script>
+
   </body>
 </html>

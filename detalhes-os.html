@@ -1,102 +1,330 @@
 <!doctype html>
 <html lang="pt-BR">
+
   <head>
+
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
     <title>FluxoOS - Detalhes da OS</title>
-    <link rel="stylesheet" href="style.css" />
+
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+
   </head>
+
+
   <body>
+
     <header>
+
       <h2>FluxoOS</h2>
+
       <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="nova-os.html">Nova OS</a>
-        <a href="index.html">Sair</a>
+
+        <a href="dashboard.html">
+          Dashboard
+        </a>
+
+        <a href="nova-os.html">
+          Nova OS
+        </a>
+
+        <a href="index.html" onclick="sair()">
+          Sair
+        </a>
+
       </nav>
+
     </header>
 
+
     <main>
-      <h1>Detalhes da Ordem de Serviço</h1>
 
-      <div class="box">
-        <p><strong>OS:</strong> <span id="dNumero"></span></p>
-        <p><strong>Cliente:</strong> <span id="dCliente"></span></p>
-        <p><strong>Responsável:</strong> <span id="dResponsavel"></span></p>
-        <p><strong>Telefone:</strong> <span id="dTelefone"></span></p>
-        <p><strong>E-mail:</strong> <span id="dEmail"></span></p>
-        <p><strong>Placa:</strong> <span id="dPlaca"></span></p>
-        <p><strong>Marca:</strong> <span id="dMarca"></span></p>
-        <p><strong>Carroceria:</strong> <span id="dCarroceria"></span></p>
-        <p><strong>Serviço:</strong> <span id="dServico"></span></p>
-        <p><strong>Prioridade:</strong> <span id="dPrioridade"></span></p>
-        <p><strong>Data de Entrada:</strong> <span id="dData"></span></p>
+      <div class="page-heading">
 
-        <hr style="margin: 20px 0" />
+        <span class="page-label">
+          VISUALIZAÇÃO
+        </span>
 
-        <p><strong>Observações:</strong></p>
-        <p id="dObservacoes"></p>
+        <h1>Detalhes da Ordem de Serviço</h1>
+
+        <p class="page-description">
+          Consulte os dados e atualize o andamento desta ordem.
+        </p>
+
       </div>
 
+
+      <!-- DADOS -->
+
+      <div class="details-grid">
+
+        <div class="box details-box">
+
+          <div class="section-title">
+
+            <div>
+              <span class="section-label">
+                IDENTIFICAÇÃO
+              </span>
+
+              <h2>Dados da Ordem</h2>
+            </div>
+
+          </div>
+
+
+          <div class="details-list">
+
+            <div class="detail-item">
+              <span>OS</span>
+              <strong id="dNumero">-</strong>
+            </div>
+
+
+            <div class="detail-item">
+              <span>Cliente</span>
+              <strong id="dCliente">-</strong>
+            </div>
+
+
+            <div class="detail-item">
+              <span>Responsável</span>
+              <strong id="dResponsavel">-</strong>
+            </div>
+
+
+            <div class="detail-item">
+              <span>Telefone</span>
+              <strong id="dTelefone">-</strong>
+            </div>
+
+
+            <div class="detail-item">
+              <span>E-mail</span>
+              <strong id="dEmail">-</strong>
+            </div>
+
+
+            <div class="detail-item">
+              <span>Data de Entrada</span>
+              <strong id="dData">-</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="box details-box">
+
+          <div class="section-title">
+
+            <div>
+              <span class="section-label">
+                VEÍCULO
+              </span>
+
+              <h2>Dados do Veículo</h2>
+            </div>
+
+          </div>
+
+
+          <div class="details-list">
+
+            <div class="detail-item">
+              <span>Placa</span>
+              <strong id="dPlaca">-</strong>
+            </div>
+
+
+            <div class="detail-item">
+              <span>Marca</span>
+              <strong id="dMarca">-</strong>
+            </div>
+
+
+            <div class="detail-item">
+              <span>Carroceria</span>
+              <strong id="dCarroceria">-</strong>
+            </div>
+
+
+            <div class="detail-item">
+              <span>Serviço</span>
+              <strong id="dServico">-</strong>
+            </div>
+
+
+            <div class="detail-item">
+              <span>Prioridade</span>
+              <strong id="dPrioridade">-</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CHECKLIST -->
+
       <div class="box">
-        <h2 style="margin-bottom: 15px; color: #1f3a5f">Alterar Status</h2>
 
-        <select id="novoStatus">
-          <option>Recebido</option>
-          <option>Em Triagem</option>
-          <option>Em Orçamento</option>
-          <option>Aguardando Aprovação</option>
-          <option>Liberado para Oficina</option>
-        </select>
+        <div class="section-title">
 
-        <br /><br />
+          <div>
+            <span class="section-label">
+              INSPEÇÃO
+            </span>
 
-        <button class="btn-primary" onclick="atualizarStatusOS()">
-          Atualizar Status
+            <h2>Checklist Inicial</h2>
+          </div>
+
+        </div>
+
+
+        <div
+          id="dChecklist"
+          class="details-checklist"
+        ></div>
+
+      </div>
+
+
+      <!-- OBSERVAÇÕES -->
+
+      <div class="box">
+
+        <div class="section-title">
+
+          <div>
+            <span class="section-label">
+              INFORMAÇÕES ADICIONAIS
+            </span>
+
+            <h2>Observações</h2>
+          </div>
+
+        </div>
+
+
+        <p
+          id="dObservacoes"
+          class="observations"
+        >
+          -
+        </p>
+
+      </div>
+
+
+      <!-- STATUS -->
+
+      <div class="box status-box">
+
+        <div class="section-title">
+
+          <div>
+            <span class="section-label">
+              FLUXO
+            </span>
+
+            <h2>Alterar Status</h2>
+          </div>
+
+        </div>
+
+
+        <div class="status-control">
+
+          <select id="novoStatus">
+
+            <option>Recebido</option>
+            <option>Em Triagem</option>
+            <option>Em Orçamento</option>
+            <option>Aguardando Aprovação</option>
+            <option>Liberado para Oficina</option>
+
+          </select>
+
+
+          <button
+            class="btn-primary"
+            onclick="atualizarStatusOS()"
+          >
+            Atualizar Status
+          </button>
+
+        </div>
+
+
+        <div class="status-warning">
+
+          <strong>
+            Atenção:
+          </strong>
+
+          Ao selecionar
+          <strong>Liberado para Oficina</strong>,
+          a OS será removida automaticamente da lista de
+          pendências.
+
+        </div>
+
+      </div>
+
+
+      <!-- EXCLUSÃO -->
+
+      <div class="danger-zone">
+
+        <div>
+
+          <span class="section-label danger-label">
+            ZONA DE RISCO
+          </span>
+
+          <h2>Excluir Ordem de Serviço</h2>
+
+          <p>
+            A exclusão remove permanentemente esta OS do sistema.
+          </p>
+
+        </div>
+
+
+        <button
+          class="btn-danger"
+          onclick="excluirOS()"
+        >
+          Excluir OS
         </button>
+
       </div>
+
 
       <a
         href="dashboard.html"
-        class="btn-primary"
-        style="text-decoration: none"
+        class="back-link"
       >
-        Voltar ao Dashboard
+        ← Voltar ao Dashboard
       </a>
+
     </main>
+
 
     <script src="script.js"></script>
 
-    <script>
-      window.addEventListener("DOMContentLoaded", function () {
-        const id = Number(localStorage.getItem("osSelecionada"));
-
-        const lista = obterOrdens();
-
-        const os = lista.find((item) => item.id === id);
-
-        if (!os) {
-          alert("OS não encontrada.");
-          window.location.href = "dashboard.html";
-          return;
-        }
-
-        document.getElementById("dNumero").textContent = os.numero;
-        document.getElementById("dCliente").textContent = os.cliente;
-        document.getElementById("dResponsavel").textContent = os.responsavel;
-        document.getElementById("dTelefone").textContent = os.telefone;
-        document.getElementById("dEmail").textContent = os.email;
-        document.getElementById("dPlaca").textContent = os.placa;
-        document.getElementById("dMarca").textContent = os.marca;
-        document.getElementById("dCarroceria").textContent = os.carroceria;
-        document.getElementById("dServico").textContent = os.servico;
-        document.getElementById("dPrioridade").textContent = os.prioridade;
-        document.getElementById("dData").textContent = os.dataEntrada;
-        document.getElementById("dObservacoes").textContent =
-          os.observacoes || "-";
-
-        document.getElementById("novoStatus").value = os.status;
-      });
-    </script>
   </body>
+
 </html>

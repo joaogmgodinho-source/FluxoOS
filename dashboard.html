@@ -1,92 +1,241 @@
 <!doctype html>
 <html lang="pt-BR">
+
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
     <title>FluxoOS - Dashboard</title>
-    <link rel="stylesheet" href="style.css" />
+
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
   </head>
+
   <body>
+
     <header>
+
       <h2>FluxoOS</h2>
 
       <nav>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="nova-os.html">Nova OS</a>
-        <a href="index.html">Sair</a>
+        <a href="dashboard.html">
+          Dashboard
+        </a>
+
+        <a href="nova-os.html">
+          Nova OS
+        </a>
+
+        <a href="index.html" onclick="sair()">
+          Sair
+        </a>
       </nav>
+
     </header>
 
+
     <main>
-      <h1>Painel de Ordens de Serviço</h1>
+
+      <div class="page-heading">
+
+        <div>
+          <span class="page-label">
+            CONTROLE OPERACIONAL
+          </span>
+
+          <h1>Painel de Ordens de Serviço</h1>
+
+          <p class="page-description">
+            Acompanhe o fluxo e a situação das ordens de serviço.
+          </p>
+        </div>
+
+      </div>
+
 
       <!-- CARDS -->
+
       <div class="cards">
-        <div class="card">
-          <h3 id="recebidoCount">0</h3>
-          <p>Recebidas</p>
+
+        <div class="card card-received">
+
+          <div class="card-icon">
+            OS
+          </div>
+
+          <div>
+            <h3 id="recebidoCount">0</h3>
+            <p>Recebidas</p>
+          </div>
+
         </div>
 
-        <div class="card">
-          <h3 id="triagemCount">0</h3>
-          <p>Em Triagem</p>
+
+        <div class="card card-triage">
+
+          <div class="card-icon">
+            TR
+          </div>
+
+          <div>
+            <h3 id="triagemCount">0</h3>
+            <p>Em Triagem</p>
+          </div>
+
         </div>
 
-        <div class="card">
-          <h3 id="orcamentoCount">0</h3>
-          <p>Em Orçamento</p>
+
+        <div class="card card-budget">
+
+          <div class="card-icon">
+            $
+          </div>
+
+          <div>
+            <h3 id="orcamentoCount">0</h3>
+            <p>Em Orçamento</p>
+          </div>
+
         </div>
 
-        <div class="card">
-          <h3 id="aprovacaoCount">0</h3>
-          <p>Aguardando Aprovação</p>
+
+        <div class="card card-approval">
+
+          <div class="card-icon">
+            !
+          </div>
+
+          <div>
+            <h3 id="aprovacaoCount">0</h3>
+            <p>Aguardando Aprovação</p>
+          </div>
+
         </div>
 
-        <div class="card">
-          <h3 id="liberadoCount">0</h3>
-          <p>Liberadas para Oficina</p>
+
+        <div class="card card-workshop">
+
+          <div class="card-icon">
+            ✓
+          </div>
+
+          <div>
+            <h3 id="liberadoCount">0</h3>
+            <p>Liberadas</p>
+          </div>
+
         </div>
+
       </div>
+
+
+      <!-- AÇÕES -->
+
+      <div class="dashboard-actions">
+
+        <a
+          href="nova-os.html"
+          class="btn-primary action-button"
+        >
+          + Nova Ordem de Serviço
+        </a>
+
+        <button
+          class="btn-secondary action-button"
+          onclick="exportarPendencias()"
+        >
+          Exportar Pendências
+        </button>
+
+      </div>
+
 
       <!-- PESQUISA -->
-      <div class="box">
-        <h2 style="margin-bottom: 15px; color: #1f3a5f">
-          Buscar Ordem de Serviço
-        </h2>
 
-        <input
-          type="text"
-          id="pesquisaOS"
-          placeholder="Buscar por número da OS, cliente ou placa..."
-          style="
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-          "
-        />
+      <div class="box search-box">
+
+        <div class="section-title">
+
+          <div>
+            <span class="section-label">
+              CONSULTA
+            </span>
+
+            <h2>Buscar Ordem de Serviço</h2>
+          </div>
+
+        </div>
+
+        <div class="search-wrapper">
+
+          <span class="search-icon">
+            ⌕
+          </span>
+
+          <input
+            type="text"
+            id="pesquisaOS"
+            placeholder="Buscar por número da OS, cliente, placa ou serviço..."
+          />
+
+        </div>
+
       </div>
 
-      <!-- TABELA -->
-      <table>
-        <thead>
-          <tr>
-            <th>OS</th>
-            <th>Cliente</th>
-            <th>Placa</th>
-            <th>Serviço</th>
-            <th>Prioridade</th>
-            <th>Status</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
 
-        <tbody id="tabelaOS">
-          <!-- O JavaScript irá adicionar as OS aqui -->
-        </tbody>
-      </table>
+      <!-- TABELA -->
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>OS</th>
+              <th>Cliente</th>
+              <th>Placa</th>
+              <th>Serviço</th>
+              <th>Prioridade</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="tabelaOS">
+
+          </tbody>
+
+        </table>
+
+        <div
+          id="semOrdens"
+          class="empty-state"
+        >
+          <div class="empty-icon">
+            ✓
+          </div>
+
+          <h3>Nenhuma ordem pendente</h3>
+
+          <p>
+            Todas as ordens foram processadas.
+          </p>
+        </div>
+
+      </div>
+
     </main>
 
     <script src="script.js"></script>
+
   </body>
+
 </html>
