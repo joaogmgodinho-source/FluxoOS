@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FluxoOS - Análises</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <div class="brand-mark">F</div>
+        <div>
+          <h2>FluxoOS</h2>
+          <span>Painel operacional</span>
+        </div>
+      </div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a
+        ><a class="active" href="analises.html">Análises</a
+        ><a href="sobre.html">Sobre & Contato</a><a href="index.html">Sair</a>
+      </nav>
+    </header>
+    <main>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">INTELIGÊNCIA OPERACIONAL</span>
+          <h1>Análises e indicadores</h1>
+          <p>Uma leitura mais detalhada da carteira de serviços.</p>
+        </div>
+      </div>
+      <section class="analysis-grid">
+        <div class="box chart-box">
+          <span class="eyebrow">SERVIÇOS</span>
+          <h2>Tipos de serviço</h2>
+          <div class="chart-wrap tall"><canvas id="serviceChart"></canvas></div>
+        </div>
+        <div class="box chart-box">
+          <span class="eyebrow">PRIORIDADE</span>
+          <h2>Prioridade x volume</h2>
+          <div class="chart-wrap tall"><canvas id="priorityBar"></canvas></div>
+        </div>
+        <div class="box chart-box wide">
+          <span class="eyebrow">CLIENTES</span>
+          <h2>Ordens por cliente</h2>
+          <div class="chart-wrap tall"><canvas id="clientChart"></canvas></div>
+        </div>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

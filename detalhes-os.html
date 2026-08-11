@@ -1,330 +1,77 @@
 <!doctype html>
 <html lang="pt-BR">
-
   <head>
-
     <meta charset="UTF-8" />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-
-    <title>FluxoOS - Detalhes da OS</title>
-
-    <link
-      rel="stylesheet"
-      href="style.css"
-    />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FluxoOS - Detalhes</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
-
-
   <body>
-
     <header>
-
-      <h2>FluxoOS</h2>
-
+      <div class="brand">
+        <div class="brand-mark">F</div>
+        <div>
+          <h2>FluxoOS</h2>
+          <span>Painel operacional</span>
+        </div>
+      </div>
       <nav>
-
-        <a href="dashboard.html">
-          Dashboard
-        </a>
-
-        <a href="nova-os.html">
-          Nova OS
-        </a>
-
-        <a href="index.html" onclick="sair()">
-          Sair
-        </a>
-
+        <a href="dashboard.html">Dashboard</a
+        ><a href="analises.html">Análises</a
+        ><a href="sobre.html">Sobre & Contato</a><a href="index.html">Sair</a>
       </nav>
-
     </header>
-
-
     <main>
-
       <div class="page-heading">
-
-        <span class="page-label">
-          VISUALIZAÇÃO
-        </span>
-
-        <h1>Detalhes da Ordem de Serviço</h1>
-
-        <p class="page-description">
-          Consulte os dados e atualize o andamento desta ordem.
-        </p>
-
-      </div>
-
-
-      <!-- DADOS -->
-
-      <div class="details-grid">
-
-        <div class="box details-box">
-
-          <div class="section-title">
-
-            <div>
-              <span class="section-label">
-                IDENTIFICAÇÃO
-              </span>
-
-              <h2>Dados da Ordem</h2>
-            </div>
-
-          </div>
-
-
-          <div class="details-list">
-
-            <div class="detail-item">
-              <span>OS</span>
-              <strong id="dNumero">-</strong>
-            </div>
-
-
-            <div class="detail-item">
-              <span>Cliente</span>
-              <strong id="dCliente">-</strong>
-            </div>
-
-
-            <div class="detail-item">
-              <span>Responsável</span>
-              <strong id="dResponsavel">-</strong>
-            </div>
-
-
-            <div class="detail-item">
-              <span>Telefone</span>
-              <strong id="dTelefone">-</strong>
-            </div>
-
-
-            <div class="detail-item">
-              <span>E-mail</span>
-              <strong id="dEmail">-</strong>
-            </div>
-
-
-            <div class="detail-item">
-              <span>Data de Entrada</span>
-              <strong id="dData">-</strong>
-            </div>
-
-          </div>
-
+        <div>
+          <span class="eyebrow">ORDEM DE SERVIÇO</span>
+          <h1>Detalhes da OS <span id="dNumero"></span></h1>
+          <p>Consulte e atualize o andamento.</p>
         </div>
-
-
-        <div class="box details-box">
-
-          <div class="section-title">
-
-            <div>
-              <span class="section-label">
-                VEÍCULO
-              </span>
-
-              <h2>Dados do Veículo</h2>
-            </div>
-
-          </div>
-
-
-          <div class="details-list">
-
-            <div class="detail-item">
-              <span>Placa</span>
-              <strong id="dPlaca">-</strong>
-            </div>
-
-
-            <div class="detail-item">
-              <span>Marca</span>
-              <strong id="dMarca">-</strong>
-            </div>
-
-
-            <div class="detail-item">
-              <span>Carroceria</span>
-              <strong id="dCarroceria">-</strong>
-            </div>
-
-
-            <div class="detail-item">
-              <span>Serviço</span>
-              <strong id="dServico">-</strong>
-            </div>
-
-
-            <div class="detail-item">
-              <span>Prioridade</span>
-              <strong id="dPrioridade">-</strong>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- CHECKLIST -->
-
-      <div class="box">
-
-        <div class="section-title">
-
-          <div>
-            <span class="section-label">
-              INSPEÇÃO
-            </span>
-
-            <h2>Checklist Inicial</h2>
-          </div>
-
-        </div>
-
-
-        <div
-          id="dChecklist"
-          class="details-checklist"
-        ></div>
-
-      </div>
-
-
-      <!-- OBSERVAÇÕES -->
-
-      <div class="box">
-
-        <div class="section-title">
-
-          <div>
-            <span class="section-label">
-              INFORMAÇÕES ADICIONAIS
-            </span>
-
-            <h2>Observações</h2>
-          </div>
-
-        </div>
-
-
-        <p
-          id="dObservacoes"
-          class="observations"
+        <button
+          class="secondary-btn"
+          onclick="window.location.href = 'dashboard.html'"
         >
-          -
-        </p>
-
+          ← Dashboard
+        </button>
       </div>
-
-
-      <!-- STATUS -->
-
-      <div class="box status-box">
-
-        <div class="section-title">
-
-          <div>
-            <span class="section-label">
-              FLUXO
-            </span>
-
-            <h2>Alterar Status</h2>
+      <div class="detail-grid">
+        <div class="box">
+          <div class="detail-list">
+            <p><b>Cliente</b><span id="dCliente"></span></p>
+            <p><b>Responsável</b><span id="dResponsavel"></span></p>
+            <p><b>Telefone</b><span id="dTelefone"></span></p>
+            <p><b>E-mail</b><span id="dEmail"></span></p>
+            <p><b>Placa</b><span id="dPlaca"></span></p>
+            <p><b>Marca</b><span id="dMarca"></span></p>
+            <p><b>Carroceria</b><span id="dCarroceria"></span></p>
+            <p><b>Serviço</b><span id="dServico"></span></p>
+            <p><b>Prioridade</b><span id="dPrioridade"></span></p>
+            <p><b>Entrada</b><span id="dData"></span></p>
           </div>
-
         </div>
-
-
-        <div class="status-control">
-
+        <div class="box status-panel">
+          <span class="eyebrow">ANDAMENTO</span>
+          <h2>Atualizar status</h2>
           <select id="novoStatus">
-
             <option>Recebido</option>
             <option>Em Triagem</option>
             <option>Em Orçamento</option>
             <option>Aguardando Aprovação</option>
-            <option>Liberado para Oficina</option>
-
-          </select>
-
-
-          <button
-            class="btn-primary"
-            onclick="atualizarStatusOS()"
-          >
-            Atualizar Status
+            <option>Liberado para Oficina</option></select
+          ><button class="btn-primary" onclick="atualizarStatusOS()">
+            Atualizar Status</button
+          ><button class="danger-btn" onclick="excluirOS()">
+            Excluir Ordem
           </button>
-
         </div>
-
-
-        <div class="status-warning">
-
-          <strong>
-            Atenção:
-          </strong>
-
-          Ao selecionar
-          <strong>Liberado para Oficina</strong>,
-          a OS será removida automaticamente da lista de
-          pendências.
-
-        </div>
-
       </div>
-
-
-      <!-- EXCLUSÃO -->
-
-      <div class="danger-zone">
-
-        <div>
-
-          <span class="section-label danger-label">
-            ZONA DE RISCO
-          </span>
-
-          <h2>Excluir Ordem de Serviço</h2>
-
-          <p>
-            A exclusão remove permanentemente esta OS do sistema.
-          </p>
-
-        </div>
-
-
-        <button
-          class="btn-danger"
-          onclick="excluirOS()"
-        >
-          Excluir OS
-        </button>
-
+      <div class="box">
+        <span class="eyebrow">OBSERVAÇÕES</span>
+        <h2>Descrição</h2>
+        <p id="dObservacoes" class="observation"></p>
       </div>
-
-
-      <a
-        href="dashboard.html"
-        class="back-link"
-      >
-        ← Voltar ao Dashboard
-      </a>
-
     </main>
-
-
     <script src="script.js"></script>
-
   </body>
-
 </html>

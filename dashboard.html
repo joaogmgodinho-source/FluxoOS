@@ -1,241 +1,172 @@
 <!doctype html>
 <html lang="pt-BR">
-
   <head>
     <meta charset="UTF-8" />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FluxoOS - Dashboard</title>
-
-    <link
-      rel="stylesheet"
-      href="style.css"
-    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   </head>
-
   <body>
-
     <header>
-
-      <h2>FluxoOS</h2>
-
+      <div class="brand">
+        <div class="brand-mark">F</div>
+        <div>
+          <h2>FluxoOS</h2>
+          <span>Painel operacional</span>
+        </div>
+      </div>
       <nav>
-        <a href="dashboard.html">
-          Dashboard
-        </a>
-
-        <a href="nova-os.html">
-          Nova OS
-        </a>
-
-        <a href="index.html" onclick="sair()">
-          Sair
-        </a>
+        <a class="active" href="dashboard.html">Dashboard</a>
+        <a href="analises.html">Análises</a>
+        <a href="sobre.html">Sobre & Contato</a>
+        <a href="index.html" onclick="sair()">Sair</a>
       </nav>
-
     </header>
 
+    <div
+      class="sidebar-overlay"
+      id="sidebarOverlay"
+      onclick="toggleSidebar()"
+    ></div>
+    <aside class="quick-sidebar" id="quickSidebar">
+      <button
+        class="sidebar-close"
+        onclick="toggleSidebar()"
+        aria-label="Fechar"
+      >
+        ×
+      </button>
+      <div class="sidebar-title">
+        <span>⚡</span>
+        <div><strong>Ações rápidas</strong><small>Atalhos do fluxo</small></div>
+      </div>
+      <button
+        class="quick-action primary-action"
+        onclick="window.location.href = 'nova-os.html'"
+      >
+        <span>＋</span>
+        <div>
+          <b>Nova Ordem de Serviço</b><small>Cadastrar uma nova OS</small>
+        </div>
+      </button>
+      <button class="quick-action" onclick="exportarPendencias()">
+        <span>⇩</span>
+        <div><b>Exportar pendências</b><small>Excel organizado</small></div>
+      </button>
+    </aside>
 
     <main>
-
       <div class="page-heading">
-
         <div>
-          <span class="page-label">
-            CONTROLE OPERACIONAL
-          </span>
-
+          <span class="eyebrow">VISÃO GERAL</span>
           <h1>Painel de Ordens de Serviço</h1>
-
-          <p class="page-description">
-            Acompanhe o fluxo e a situação das ordens de serviço.
-          </p>
+          <p>Controle o fluxo da oficina em um só lugar.</p>
         </div>
-
+        <button class="quick-trigger" onclick="toggleSidebar()">
+          ⚡ Ações rápidas <span>☰</span>
+        </button>
       </div>
 
-
-      <!-- CARDS -->
-
-      <div class="cards">
-
-        <div class="card card-received">
-
-          <div class="card-icon">
-            OS
-          </div>
-
+      <section class="cards">
+        <div class="card metric-card">
+          <span class="metric-icon">◷</span>
           <div>
             <h3 id="recebidoCount">0</h3>
             <p>Recebidas</p>
           </div>
-
         </div>
-
-
-        <div class="card card-triage">
-
-          <div class="card-icon">
-            TR
-          </div>
-
+        <div class="card metric-card">
+          <span class="metric-icon">⌕</span>
           <div>
             <h3 id="triagemCount">0</h3>
             <p>Em Triagem</p>
           </div>
-
         </div>
-
-
-        <div class="card card-budget">
-
-          <div class="card-icon">
-            $
-          </div>
-
+        <div class="card metric-card">
+          <span class="metric-icon">▤</span>
           <div>
             <h3 id="orcamentoCount">0</h3>
             <p>Em Orçamento</p>
           </div>
-
         </div>
-
-
-        <div class="card card-approval">
-
-          <div class="card-icon">
-            !
-          </div>
-
+        <div class="card metric-card">
+          <span class="metric-icon">✓</span>
           <div>
             <h3 id="aprovacaoCount">0</h3>
             <p>Aguardando Aprovação</p>
           </div>
-
         </div>
-
-
-        <div class="card card-workshop">
-
-          <div class="card-icon">
-            ✓
-          </div>
-
+        <div class="card metric-card">
+          <span class="metric-icon">⚙</span>
           <div>
             <h3 id="liberadoCount">0</h3>
-            <p>Liberadas</p>
+            <p>Liberadas para Oficina</p>
           </div>
-
         </div>
+      </section>
 
-      </div>
+      <section class="box search-box">
+        <div>
+          <span class="eyebrow">PESQUISA</span>
+          <h2>Buscar Ordem de Serviço</h2>
+          <p>Procure por número, cliente, placa, serviço ou status.</p>
+        </div>
+        <input
+          type="search"
+          id="pesquisaOS"
+          placeholder="Ex.: OS-1004, TransLog, ABC1D23..."
+        />
+      </section>
 
+      <section class="dashboard-grid">
+        <div class="box chart-box">
+          <div class="box-heading">
+            <div>
+              <span class="eyebrow">FLUXO</span>
+              <h2>Ordens por status</h2>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+        </div>
+        <div class="box chart-box">
+          <div class="box-heading">
+            <div>
+              <span class="eyebrow">PRIORIDADE</span>
+              <h2>Distribuição de prioridades</h2>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="priorityChart"></canvas></div>
+        </div>
+      </section>
 
-      <!-- AÇÕES -->
-
-      <div class="dashboard-actions">
-
-        <a
-          href="nova-os.html"
-          class="btn-primary action-button"
-        >
-          + Nova Ordem de Serviço
-        </a>
-
-        <button
-          class="btn-secondary action-button"
-          onclick="exportarPendencias()"
-        >
-          Exportar Pendências
-        </button>
-
-      </div>
-
-
-      <!-- PESQUISA -->
-
-      <div class="box search-box">
-
-        <div class="section-title">
-
+      <section class="box table-box">
+        <div class="box-heading">
           <div>
-            <span class="section-label">
-              CONSULTA
-            </span>
-
-            <h2>Buscar Ordem de Serviço</h2>
+            <span class="eyebrow">OPERAÇÃO</span>
+            <h2>Ordens cadastradas</h2>
           </div>
-
+          <span class="result-count" id="resultCount">0 ordens</span>
         </div>
-
-        <div class="search-wrapper">
-
-          <span class="search-icon">
-            ⌕
-          </span>
-
-          <input
-            type="text"
-            id="pesquisaOS"
-            placeholder="Buscar por número da OS, cliente, placa ou serviço..."
-          />
-
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>OS</th>
+                <th>Cliente</th>
+                <th>Placa</th>
+                <th>Serviço</th>
+                <th>Prioridade</th>
+                <th>Status</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody id="tabelaOS"></tbody>
+          </table>
         </div>
-
-      </div>
-
-
-      <!-- TABELA -->
-
-      <div class="table-container">
-
-        <table>
-
-          <thead>
-
-            <tr>
-              <th>OS</th>
-              <th>Cliente</th>
-              <th>Placa</th>
-              <th>Serviço</th>
-              <th>Prioridade</th>
-              <th>Status</th>
-              <th>Ação</th>
-            </tr>
-
-          </thead>
-
-          <tbody id="tabelaOS">
-
-          </tbody>
-
-        </table>
-
-        <div
-          id="semOrdens"
-          class="empty-state"
-        >
-          <div class="empty-icon">
-            ✓
-          </div>
-
-          <h3>Nenhuma ordem pendente</h3>
-
-          <p>
-            Todas as ordens foram processadas.
-          </p>
-        </div>
-
-      </div>
-
+      </section>
     </main>
-
     <script src="script.js"></script>
-
   </body>
-
 </html>

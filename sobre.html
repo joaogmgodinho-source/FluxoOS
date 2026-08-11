@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FluxoOS - Sobre & Contato</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <div class="brand-mark">F</div>
+        <div>
+          <h2>FluxoOS</h2>
+          <span>Painel operacional</span>
+        </div>
+      </div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a
+        ><a href="analises.html">Análises</a
+        ><a class="active" href="sobre.html">Sobre & Contato</a
+        ><a href="index.html">Sair</a>
+      </nav>
+    </header>
+    <main>
+      <div class="page-heading">
+        <div>
+          <span class="eyebrow">FLUXOOS</span>
+          <h1>Sobre a empresa</h1>
+          <p>
+            Tecnologia aplicada à rotina de oficinas e operações de manutenção.
+          </p>
+        </div>
+      </div>
+      <section class="about-grid">
+        <div class="box about-hero">
+          <span class="eyebrow">NOSSA PROPOSTA</span>
+          <h2>Mais controle. Menos retrabalho.</h2>
+          <p>
+            O FluxoOS é uma plataforma conceitual criada para organizar o ciclo
+            completo das ordens de serviço: entrada, triagem, orçamento,
+            aprovação e liberação para oficina.
+          </p>
+          <p>
+            A proposta é transformar informações espalhadas em um fluxo visual,
+            simples e rastreável. A equipe consegue localizar uma OS
+            rapidamente, acompanhar prioridades e tomar decisões com base em
+            indicadores.
+          </p>
+          <p>
+            Para empresas que trabalham com manutenção de caminhões, implementos
+            e carrocerias, pequenos ganhos de organização podem representar
+            menos tempo parado, comunicação mais clara com o cliente e maior
+            previsibilidade operacional.
+          </p>
+        </div>
+        <div class="box">
+          <span class="eyebrow">FALE CONOSCO</span>
+          <h2>Entre em contato</h2>
+          <form id="contatoForm">
+            <label>Nome</label><input id="contatoNome" required /><label
+              >E-mail</label
+            ><input type="email" id="contatoEmail" required /><label
+              >Assunto</label
+            ><select id="contatoAssunto">
+              <option>Demonstração</option>
+              <option>Suporte</option>
+              <option>Parceria</option>
+              <option>Outro</option></select
+            ><label>Mensagem</label
+            ><textarea id="contatoMensagem" rows="6" required></textarea
+            ><button class="btn-primary">Enviar mensagem</button>
+          </form>
+        </div>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

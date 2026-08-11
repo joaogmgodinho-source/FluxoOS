@@ -3,92 +3,350 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>FluxoOS - Login</title>
-
     <link rel="stylesheet" href="style.css" />
   </head>
-
   <body class="login-body">
-
     <div class="login-container">
-
       <div class="login-card">
-
         <div class="logo-area">
           <h1>FluxoOS</h1>
           <p>Sistema de Controle de Ordens de Serviço</p>
         </div>
 
-        <form id="loginForm">
+        <!-- =========================
+           LOGIN
+      ========================== -->
+        <div id="loginBox">
+          <form id="loginForm">
+            <div class="input-group">
+              <label>Usuário</label>
+              <input
+                type="text"
+                id="usuario"
+                placeholder="Digite seu usuário"
+                required
+              />
+            </div>
 
+            <div class="input-group">
+              <label>Senha</label>
+
+              <div style="position: relative">
+                <input
+                  type="password"
+                  id="senha"
+                  placeholder="Digite sua senha"
+                  required
+                  style="padding-right: 45px"
+                />
+
+                <button
+                  type="button"
+                  onclick="toggleSenha('senha', this)"
+                  style="
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    border: none;
+                    background: none;
+                    cursor: pointer;
+                    font-size: 18px;
+                  "
+                >
+                  👁
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Entrar</button>
+          </form>
+
+          <div style="margin-top: 16px; text-align: center">
+            <button
+              type="button"
+              class="btn-primary"
+              style="background: #6b7280"
+              onclick="mostrarCadastro()"
+            >
+              Criar conta
+            </button>
+          </div>
+
+          <div
+            id="loginError"
+            style="
+              display: none;
+              color: #dc2626;
+              margin-top: 15px;
+              text-align: center;
+              font-weight: 600;
+            "
+          >
+            Usuário ou senha incorretos.
+          </div>
+        </div>
+
+        <!-- =========================
+           CADASTRO
+      ========================== -->
+        <div id="cadastroBox" style="display: none">
           <div class="input-group">
-            <label for="usuario">Usuário</label>
+            <label>Novo usuário</label>
 
             <input
               type="text"
-              id="usuario"
-              placeholder="Digite seu usuário"
-              required
+              id="novoUsuario"
+              placeholder="Escolha um usuário"
             />
           </div>
 
           <div class="input-group">
-            <label for="senha">Senha</label>
+            <label>Nova senha</label>
 
-            <input
-              type="password"
-              id="senha"
-              placeholder="Digite sua senha"
-              required
-            />
+            <div style="position: relative">
+              <input
+                type="password"
+                id="novaSenha"
+                placeholder="Digite uma senha"
+                style="padding-right: 45px"
+              />
+
+              <button
+                type="button"
+                onclick="toggleSenha('novaSenha', this)"
+                style="
+                  position: absolute;
+                  right: 10px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  border: none;
+                  background: none;
+                  cursor: pointer;
+                  font-size: 18px;
+                "
+              >
+                👁
+              </button>
+            </div>
           </div>
 
-          <button
-            type="submit"
-            class="btn-primary"
-          >
-            Entrar
+          <div class="input-group">
+            <label>Confirmar senha</label>
+
+            <div style="position: relative">
+              <input
+                type="password"
+                id="confirmarSenha"
+                placeholder="Repita a senha"
+                style="padding-right: 45px"
+              />
+
+              <button
+                type="button"
+                onclick="toggleSenha('confirmarSenha', this)"
+                style="
+                  position: absolute;
+                  right: 10px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  border: none;
+                  background: none;
+                  cursor: pointer;
+                  font-size: 18px;
+                "
+              >
+                👁
+              </button>
+            </div>
+          </div>
+
+          <button type="button" class="btn-primary" onclick="criarConta()">
+            Criar conta
           </button>
 
-        </form>
+          <div style="margin-top: 12px; text-align: center">
+            <button
+              type="button"
+              class="btn-primary"
+              style="background: #6b7280"
+              onclick="mostrarLogin()"
+            >
+              Voltar ao login
+            </button>
+          </div>
 
-        <div class="login-footer">
-          <small>
-            Protótipo desenvolvido para o desafio SENAI
-          </small>
+          <div
+            id="cadastroError"
+            style="
+              display: none;
+              color: #dc2626;
+              margin-top: 15px;
+              text-align: center;
+              font-weight: 600;
+            "
+          ></div>
         </div>
 
+        <div class="login-footer">
+          <small>Protótipo desenvolvido para o desafio SENAI</small>
+        </div>
       </div>
-
     </div>
 
     <script>
+      // =========================
+      // USUÁRIOS
+      // =========================
+
+      function obterUsuarios() {
+        return JSON.parse(localStorage.getItem("fluxoOSUsuarios")) || {};
+      }
+
+      function salvarUsuarios(usuarios) {
+        localStorage.setItem("fluxoOSUsuarios", JSON.stringify(usuarios));
+      }
+
+      // Conta padrão
+      (function () {
+        const usuarios = obterUsuarios();
+
+        if (!usuarios.admin) {
+          usuarios.admin = "fluxo123";
+
+          salvarUsuarios(usuarios);
+        }
+      })();
+
+      // =========================
+      // MOSTRAR / OCULTAR SENHA
+      // =========================
+
+      function toggleSenha(id, botao) {
+        const input = document.getElementById(id);
+
+        if (input.type === "password") {
+          input.type = "text";
+
+          botao.textContent = "🙈";
+        } else {
+          input.type = "password";
+
+          botao.textContent = "👁";
+        }
+      }
+
+      // =========================
+      // ALTERNAR TELAS
+      // =========================
+
+      function mostrarCadastro() {
+        document.getElementById("loginBox").style.display = "none";
+
+        document.getElementById("cadastroBox").style.display = "block";
+      }
+
+      function mostrarLogin() {
+        document.getElementById("cadastroBox").style.display = "none";
+
+        document.getElementById("loginBox").style.display = "block";
+      }
+
+      // =========================
+      // LOGIN
+      // =========================
+
       document
         .getElementById("loginForm")
-        .addEventListener("submit", function (event) {
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
 
-          event.preventDefault();
+          const usuario = document.getElementById("usuario").value.trim();
 
-          const usuario =
-            document.getElementById("usuario").value.trim();
+          const senha = document.getElementById("senha").value;
 
-          const senha =
-            document.getElementById("senha").value.trim();
+          const usuarios = obterUsuarios();
 
-          if (!usuario || !senha) {
-            alert("Preencha usuário e senha.");
-            return;
+          if (usuarios[usuario] && usuarios[usuario] === senha) {
+            localStorage.setItem("usuarioLogado", usuario);
+
+            localStorage.setItem("fluxoOSAutenticado", "true");
+
+            window.location.href = "dashboard.html";
+          } else {
+            document.getElementById("loginError").style.display = "block";
           }
-
-          localStorage.setItem(
-            "usuarioLogado",
-            usuario
-          );
-
-          window.location.href = "dashboard.html";
         });
-    </script>
 
+      // =========================
+      // CRIAR CONTA
+      // =========================
+
+      function criarConta() {
+        const usuario = document.getElementById("novoUsuario").value.trim();
+
+        const senha = document.getElementById("novaSenha").value;
+
+        const confirmar = document.getElementById("confirmarSenha").value;
+
+        const erro = document.getElementById("cadastroError");
+
+        erro.style.display = "none";
+
+        if (!usuario || !senha || !confirmar) {
+          erro.textContent = "Preencha todos os campos.";
+
+          erro.style.display = "block";
+
+          return;
+        }
+
+        if (usuario.toLowerCase() === senha.toLowerCase()) {
+          erro.textContent = "A senha não pode ser igual ao nome de usuário.";
+
+          erro.style.display = "block";
+
+          return;
+        }
+
+        if (senha !== confirmar) {
+          erro.textContent = "As senhas não coincidem.";
+
+          erro.style.display = "block";
+
+          return;
+        }
+
+        const usuarios = obterUsuarios();
+
+        if (usuarios[usuario]) {
+          erro.textContent = "Esse usuário já existe.";
+
+          erro.style.display = "block";
+
+          return;
+        }
+
+        usuarios[usuario] = senha;
+
+        salvarUsuarios(usuarios);
+
+        alert("Conta criada com sucesso! Faça login para continuar.");
+
+        document.getElementById("novoUsuario").value = "";
+        document.getElementById("novaSenha").value = "";
+        document.getElementById("confirmarSenha").value = "";
+
+        mostrarLogin();
+      }
+
+      // Sempre iniciar pela tela de login (bom para apresentações/pitch)
+      window.addEventListener("DOMContentLoaded", function () {
+        localStorage.removeItem("fluxoOSAutenticado");
+        localStorage.removeItem("usuarioLogado");
+        localStorage.removeItem("osSelecionada");
+      });
+    </script>
   </body>
 </html>
