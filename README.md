@@ -100,7 +100,8 @@ flowtech/
 ├── detalhes-os.html     # detalhes / atualização de status / exclusão
 ├── analises.html        # gráficos e indicadores
 ├── sobre.html            # institucional + contato
-├── script.js             # lógica compartilhada (auth, CRUD, gráficos, exportação)
+├── script.js             # lógica compartilhada (auth, CRUD, gráficos, exportação, QR Code)
+├── qrcode.min.js         # lib de geração de QR Code (vendorizada, sem CDN)
 └── style.css              # identidade visual
 ```
 
@@ -109,6 +110,7 @@ flowtech/
 - HTML, CSS e JavaScript puro (sem framework, sem build step).
 - [Chart.js](https://www.chartjs.org/) via CDN — gráficos do dashboard e das análises.
 - [SheetJS (xlsx)](https://sheetjs.com/) via CDN — exportação de pendências para Excel.
+- [qrcodejs](https://github.com/davidshimjs/qrcodejs) — geração do QR Code da etiqueta de cada OS. Diferente das outras duas, essa lib fica **local** (`qrcode.min.js`), sem CDN, para carregar instantâneo e funcionar offline.
 
 ## Limitações conhecidas
 
