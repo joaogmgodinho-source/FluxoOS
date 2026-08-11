@@ -647,31 +647,97 @@ function obterOSAtual() {
   return obterOrdens().find((os) => os.id === id);
 }
 
-function gerarQRCode() {
+// Mostra uma mensagem de status dentro da caixa do QR Code
+// (estado neutro/"carregando" ou erro, com um ícone simples).
+function definirStatusQRCode(mensagem, tipo = "info") {
   const container = document.getElementById("qrcodeBox");
   if (!container) return;
 
+  container.innerHTML = "";
+  container.classList.remove("is-loading", "is-error");
+  if (tipo === "loading") container.classList.add("is-loading");
+  if (tipo === "erro") container.classList.add("is-error");
+
+  const span = document.createElement("span");
+  span.className = "qrcode-placeholder";
+  span.textContent = mensagem;
+  container.appendChild(span);
+}
+
+function gerarQRCode() {
+  const container = document.getElementById("qrcodeBox");
+  const btnGerar = document.getElementById("btnGerarQRCode");
+  const btnImprimir = document.getElementById("btnImprimirEtiqueta");
+  if (!container) return;
+
+  if (btnImprimir) btnImprimir.disabled = true;
+
+  // Biblioteca não carregou (ex.: arquivo qrcode.min.js ausente/renomeado,
+  // ou bloqueado por algum motivo). Sem ela não tem como gerar nada.
   if (typeof QRCode === "undefined") {
-    alert(
-      "Biblioteca de QR Code não carregada (verifique a conexão com a internet).",
+    definirStatusQRCode(
+      "Não foi possível carregar o gerador de QR Code (qrcode.min.js). " +
+        "Verifique se o arquivo está na mesma pasta do projeto e se o " +
+        "console do navegador (F12) mostra algum erro ao carregar a página.",
+      "erro",
     );
     return;
   }
 
   const os = obterOSAtual();
-  if (!os) return;
+  if (!os) {
+    definirStatusQRCode(
+      "Não encontrei os dados desta OS. Volte ao dashboard e abra a ordem novamente.",
+      "erro",
+    );
+    return;
+  }
 
-  container.innerHTML = "";
+  // Feedback imediato de que a geração começou, antes do trabalho pesado.
+  definirStatusQRCode("Gerando QR Code...", "loading");
+  if (btnGerar) btnGerar.disabled = true;
 
-  new QRCode(container, {
-    text: montarTextoQRCode(os),
-    width: 200,
-    height: 200,
-    correctLevel: QRCode.CorrectLevel.M,
-  });
+  // setTimeout(0) garante que o navegador pinte a mensagem de "Gerando..."
+  // antes de travar a thread com o cálculo do QR Code.
+  setTimeout(() => {
+    try {
+      const texto = montarTextoQRCode(os);
+      container.innerHTML = "";
+      container.classList.remove("is-loading", "is-error");
 
-  const btnImprimir = document.getElementById("btnImprimirEtiqueta");
-  if (btnImprimir) btnImprimir.disabled = false;
+      new QRCode(container, {
+        text: texto,
+        width: 200,
+        height: 200,
+        colorDark: "#111827",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M,
+      });
+
+      // A lib desenha em <canvas> (ou <img> depois de convertida); se por
+      // algum motivo nada foi desenhado, trata como falha em vez de deixar
+      // a caixa vazia sem explicação.
+      const gerado = container.querySelector("img, canvas");
+      if (!gerado) {
+        throw new Error("O QR Code não foi desenhado.");
+      }
+
+      if (btnImprimir) btnImprimir.disabled = false;
+    } catch (erro) {
+      console.error("Falha ao gerar QR Code:", erro);
+
+      // "Too long data" é o erro que a lib lança quando o texto não cabe
+      // nem no maior tamanho de QR Code suportado.
+      const mensagem = /too long/i.test(erro.message || "")
+        ? "Os dados desta OS são longos demais para caber em um QR Code. " +
+          "Tente reduzir o texto das observações."
+        : "Não foi possível gerar o QR Code. Verifique o console (F12) para mais detalhes.";
+
+      definirStatusQRCode(mensagem, "erro");
+    } finally {
+      if (btnGerar) btnGerar.disabled = false;
+    }
+  }, 0);
 }
 
 // Abre uma janela só com a etiqueta (QR + dados essenciais) e chama a

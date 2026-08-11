@@ -674,6 +674,40 @@ tbody tr:hover {
   text-align: center;
   padding: 0 20px;
 }
+.qrcode-preview.is-loading {
+  border-color: #93c5fd;
+  background: #eff6ff;
+}
+.qrcode-preview.is-loading .qrcode-placeholder {
+  color: #2563eb;
+  position: relative;
+  padding-top: 34px;
+}
+.qrcode-preview.is-loading .qrcode-placeholder::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-left: -9px;
+  border: 2px solid #bfdbfe;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+.qrcode-preview.is-error {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+.qrcode-preview.is-error .qrcode-placeholder {
+  color: #b91c1c;
+}
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .qr-actions {
   display: flex;
   flex-direction: column;
