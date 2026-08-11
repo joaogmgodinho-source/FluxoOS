@@ -528,6 +528,42 @@ function abrirDetalhes(id) {
   window.location.href = "detalhes-os.html";
 }
 
+// Mapeia id do elemento -> campo da OS, para preencher a tela de detalhes.
+const CAMPOS_DETALHE = {
+  dNumero: "numero",
+  dCliente: "cliente",
+  dResponsavel: "responsavel",
+  dTelefone: "telefone",
+  dEmail: "email",
+  dPlaca: "placa",
+  dMarca: "marca",
+  dCarroceria: "carroceria",
+  dServico: "servico",
+  dPrioridade: "prioridade",
+  dData: "dataEntrada",
+  dObservacoes: "observacoes",
+};
+
+function carregarDetalhes() {
+  if (!document.getElementById("dNumero")) return;
+
+  const id = Number(localStorage.getItem(STORAGE_KEYS.OS_SELECIONADA));
+  const os = obterOrdens().find((o) => o.id === id);
+
+  if (!os) {
+    window.location.href = "dashboard.html";
+    return;
+  }
+
+  Object.entries(CAMPOS_DETALHE).forEach(([elId, campo]) => {
+    const el = document.getElementById(elId);
+    if (el) el.textContent = os[campo];
+  });
+
+  const selectStatus = document.getElementById("novoStatus");
+  if (selectStatus) selectStatus.value = os.status;
+}
+
 function atualizarStatusOS() {
   const id = Number(localStorage.getItem(STORAGE_KEYS.OS_SELECIONADA));
   const lista = obterOrdens();
@@ -661,5 +697,6 @@ window.addEventListener("DOMContentLoaded", function () {
   preencherNovaOS();
   carregarDashboard();
   carregarAnalises();
+  carregarDetalhes();
   pesquisarOS();
 });

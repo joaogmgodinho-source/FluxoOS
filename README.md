@@ -112,8 +112,6 @@ flowtech/
 
 ## Limitações conhecidas
 
-- `detalhes-os.html` ainda não preenche os campos da OS selecionada
-  automaticamente (falta a função de carregamento dos detalhes).
 - O formulário de contato em `sobre.html` não está conectado à função
   `enviarContato` — o envio não dispara a mensagem de confirmação.
 - Autenticação é apenas simulada (sem hashing, sem backend); não usar como
