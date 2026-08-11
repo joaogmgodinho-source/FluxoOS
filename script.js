@@ -4,11 +4,63 @@
 ===================================================== */
 
 /* =========================
+   CONSTANTES
+========================= */
+
+const STORAGE_KEYS = {
+  AUTENTICADO: "fluxoOSAutenticado",
+  ORDENS: "ordens",
+  OS_SELECIONADA: "osSelecionada",
+  DEMO_GERADA: "demoGerada",
+};
+
+const STATUS = {
+  RECEBIDO: "Recebido",
+  TRIAGEM: "Em Triagem",
+  ORCAMENTO: "Em Orçamento",
+  APROVACAO: "Aguardando Aprovação",
+  LIBERADO: "Liberado para Oficina",
+};
+
+// Ordem fixa dos cartões/gráfico de status do dashboard.
+const STATUS_CARDS = [
+  { id: "recebidoCount", status: STATUS.RECEBIDO },
+  { id: "triagemCount", status: STATUS.TRIAGEM },
+  { id: "orcamentoCount", status: STATUS.ORCAMENTO },
+  { id: "aprovacaoCount", status: STATUS.APROVACAO },
+  { id: "liberadoCount", status: STATUS.LIBERADO },
+];
+
+const PRIORIDADES = ["Baixa", "Média", "Alta", "Urgente"];
+
+// Paleta categórica (ordem fixa - identidade de séries/fatias).
+const CORES_CATEGORICAS = [
+  "#2a78d6",
+  "#eb6834",
+  "#1baf7a",
+  "#eda100",
+  "#e87ba4",
+  "#008300",
+  "#4a3aa7",
+  "#e34948",
+];
+const COR_OUTROS = "#898781";
+const COR_SERIE_UNICA = "#2a78d6";
+
+// Prioridade é uma escala de urgência: reaproveita a paleta de status (fixa).
+const CORES_PRIORIDADE = {
+  Baixa: "#0ca30c",
+  Média: "#fab219",
+  Alta: "#ec835a",
+  Urgente: "#d03b3b",
+};
+
+/* =========================
    AUTENTICAÇÃO
 ========================= */
 
 function verificarAutenticacao() {
-  const autenticado = localStorage.getItem("fluxoOSAutenticado");
+  const autenticado = localStorage.getItem(STORAGE_KEYS.AUTENTICADO);
   const pagina = window.location.pathname.split("/").pop();
 
   // A página de login é pública
@@ -21,10 +73,10 @@ function verificarAutenticacao() {
 
 verificarAutenticacao();
 
-function logout() {
-  localStorage.removeItem("fluxoOSAutenticado");
+function sair() {
+  localStorage.removeItem(STORAGE_KEYS.AUTENTICADO);
   localStorage.removeItem("usuarioLogado");
-  localStorage.removeItem("osSelecionada");
+  localStorage.removeItem(STORAGE_KEYS.OS_SELECIONADA);
   window.location.href = "index.html";
 }
 
@@ -33,11 +85,15 @@ function logout() {
 ========================= */
 
 function obterOrdens() {
-  return JSON.parse(localStorage.getItem("ordens")) || [];
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.ORDENS)) || [];
+  } catch {
+    return [];
+  }
 }
 
 function salvarLista(lista) {
-  localStorage.setItem("ordens", JSON.stringify(lista));
+  localStorage.setItem(STORAGE_KEYS.ORDENS, JSON.stringify(lista));
 }
 
 /* =========================
@@ -45,7 +101,7 @@ function salvarLista(lista) {
 ========================= */
 
 function gerarOSDemo() {
-  if (localStorage.getItem("demoGerada") === "true") return;
+  if (localStorage.getItem(STORAGE_KEYS.DEMO_GERADA) === "true") return;
 
   const hoje = new Date();
 
@@ -145,7 +201,7 @@ function gerarOSDemo() {
   }));
 
   salvarLista(lista);
-  localStorage.setItem("demoGerada", "true");
+  localStorage.setItem(STORAGE_KEYS.DEMO_GERADA, "true");
 }
 
 gerarOSDemo();
@@ -221,58 +277,223 @@ function salvarOS() {
 }
 
 /* =========================
+   AGREGAÇÃO DE DADOS
+========================= */
+
+// Conta as ordens agrupando pelo valor de um campo (ex.: "status", "servico").
+function agruparPor(lista, campo) {
+  return lista.reduce((contagem, os) => {
+    const chave = os[campo] || "Não informado";
+    contagem[chave] = (contagem[chave] || 0) + 1;
+    return contagem;
+  }, {});
+}
+
+// Como agruparPor, mas ordenado do maior para o menor volume.
+function agruparPorOrdenado(lista, campo) {
+  return Object.entries(agruparPor(lista, campo)).sort((a, b) => b[1] - a[1]);
+}
+
+// Mantém só as `limite` categorias mais frequentes e soma o restante em "Outros",
+// evitando fatias/cores demais em gráficos com muitos valores distintos (ex.: clientes).
+function agruparComOutros(lista, campo, limite = 7) {
+  const ordenado = agruparPorOrdenado(lista, campo);
+  if (ordenado.length <= limite) return ordenado;
+
+  const principais = ordenado.slice(0, limite);
+  const restante = ordenado
+    .slice(limite)
+    .reduce((soma, [, valor]) => soma + valor, 0);
+
+  return [...principais, ["Outros", restante]];
+}
+
+/* =========================
+   GRÁFICOS (Chart.js)
+========================= */
+
+const graficosAtivos = {};
+
+// Cria (ou substitui, se já existir) o gráfico de um canvas. Evita instâncias
+// duplicadas do Chart.js ao recarregar a página/dados.
+function renderizarGrafico(canvasId, config) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+
+  if (typeof Chart === "undefined") {
+    console.warn("Chart.js não carregado; gráfico não será exibido:", canvasId);
+    return;
+  }
+
+  if (graficosAtivos[canvasId]) {
+    graficosAtivos[canvasId].destroy();
+  }
+
+  graficosAtivos[canvasId] = new Chart(canvas, config);
+}
+
+function coresCategoricas(quantidade, temOutros) {
+  const diretas = temOutros ? quantidade - 1 : quantidade;
+  const cores = CORES_CATEGORICAS.slice(0, diretas);
+  if (temOutros) cores.push(COR_OUTROS);
+  return cores;
+}
+
+// Gráfico de status/prioridade: doughnut com legenda, categorias em ordem fixa.
+function renderizarDoughnut(canvasId, entradas, cores) {
+  renderizarGrafico(canvasId, {
+    type: "doughnut",
+    data: {
+      labels: entradas.map(([label]) => label),
+      datasets: [
+        {
+          data: entradas.map(([, valor]) => valor),
+          backgroundColor: cores,
+          borderColor: "#fff",
+          borderWidth: 2,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: "bottom" } },
+    },
+  });
+}
+
+// Gráfico de ranking (ex.: ordens por cliente): barras horizontais, cor única.
+function renderizarBarraRanking(canvasId, entradas) {
+  renderizarGrafico(canvasId, {
+    type: "bar",
+    data: {
+      labels: entradas.map(([label]) => label),
+      datasets: [
+        {
+          label: "Ordens",
+          data: entradas.map(([, valor]) => valor),
+          backgroundColor: COR_SERIE_UNICA,
+          borderRadius: 4,
+        },
+      ],
+    },
+    options: {
+      indexAxis: "y",
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { x: { beginAtZero: true, ticks: { precision: 0 } } },
+    },
+  });
+}
+
+// Gráfico de prioridade x volume: barras verticais coloridas pela urgência.
+function renderizarBarraPrioridade(canvasId, contagemPorPrioridade) {
+  renderizarGrafico(canvasId, {
+    type: "bar",
+    data: {
+      labels: PRIORIDADES,
+      datasets: [
+        {
+          label: "Ordens",
+          data: PRIORIDADES.map((p) => contagemPorPrioridade[p] || 0),
+          backgroundColor: PRIORIDADES.map((p) => CORES_PRIORIDADE[p]),
+          borderRadius: 4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+    },
+  });
+}
+
+/* =========================
    DASHBOARD
 ========================= */
+
+function criarLinhaOS(os) {
+  const tr = document.createElement("tr");
+
+  [os.numero, os.cliente, os.placa, os.servico, os.prioridade, os.status].forEach(
+    (valor) => {
+      const td = document.createElement("td");
+      td.textContent = valor;
+      tr.appendChild(td);
+    },
+  );
+
+  const tdAcao = document.createElement("td");
+  const botao = document.createElement("button");
+  botao.className = "table-btn";
+  botao.textContent = "Abrir";
+  botao.addEventListener("click", () => abrirDetalhes(os.id));
+  tdAcao.appendChild(botao);
+  tr.appendChild(tdAcao);
+
+  return tr;
+}
+
+function atualizarContadorResultados(visiveis, total) {
+  const contador = document.getElementById("resultCount");
+  if (!contador) return;
+  contador.textContent = `${visiveis} de ${total} ordens`;
+}
 
 function carregarDashboard() {
   const tabela = document.getElementById("tabelaOS");
   if (!tabela) return;
 
   const lista = obterOrdens();
+  const contagemStatus = agruparPor(lista, "status");
+
   tabela.innerHTML = "";
+  const fragmento = document.createDocumentFragment();
+  lista.forEach((os) => fragmento.appendChild(criarLinhaOS(os)));
+  tabela.appendChild(fragmento);
 
-  let recebido = 0;
-  let triagem = 0;
-  let orcamento = 0;
-  let aprovacao = 0;
-  let liberado = 0;
-
-  lista.forEach((os) => {
-    if (os.status === "Recebido") recebido++;
-    if (os.status === "Em Triagem") triagem++;
-    if (os.status === "Em Orçamento") orcamento++;
-    if (os.status === "Aguardando Aprovação") aprovacao++;
-    if (os.status === "Liberado para Oficina") liberado++;
-
-    tabela.innerHTML += `
-      <tr>
-        <td>${os.numero}</td>
-        <td>${os.cliente}</td>
-        <td>${os.placa}</td>
-        <td>${os.servico}</td>
-        <td>${os.prioridade}</td>
-        <td>${os.status}</td>
-        <td>
-          <button onclick="abrirDetalhes(${os.id})">
-            Abrir
-          </button>
-        </td>
-      </tr>
-    `;
-  });
-
-  const map = {
-    recebidoCount: recebido,
-    triagemCount: triagem,
-    orcamentoCount: orcamento,
-    aprovacaoCount: aprovacao,
-    liberadoCount: liberado,
-  };
-
-  Object.keys(map).forEach((id) => {
+  STATUS_CARDS.forEach(({ id, status }) => {
     const el = document.getElementById(id);
-    if (el) el.textContent = map[id];
+    if (el) el.textContent = contagemStatus[status] || 0;
   });
+
+  atualizarContadorResultados(lista.length, lista.length);
+
+  const statusEntradas = STATUS_CARDS.map(({ status }) => [
+    status,
+    contagemStatus[status] || 0,
+  ]);
+  renderizarDoughnut(
+    "statusChart",
+    statusEntradas,
+    coresCategoricas(statusEntradas.length, false),
+  );
+
+  renderizarBarraPrioridade("priorityChart", agruparPor(lista, "prioridade"));
+}
+
+/* =========================
+   ANÁLISES
+========================= */
+
+function carregarAnalises() {
+  if (!document.getElementById("serviceChart")) return;
+
+  const lista = obterOrdens();
+
+  const servicos = agruparComOutros(lista, "servico");
+  renderizarDoughnut(
+    "serviceChart",
+    servicos,
+    coresCategoricas(servicos.length, servicos.at(-1)?.[0] === "Outros"),
+  );
+
+  renderizarBarraPrioridade("priorityBar", agruparPor(lista, "prioridade"));
+
+  renderizarBarraRanking("clientChart", agruparComOutros(lista, "cliente"));
 }
 
 /* =========================
@@ -286,12 +507,15 @@ function pesquisarOS() {
   input.addEventListener("keyup", function () {
     const filtro = input.value.toLowerCase();
     const linhas = document.querySelectorAll("#tabelaOS tr");
+    let visiveis = 0;
 
     linhas.forEach((linha) => {
-      linha.style.display = linha.textContent.toLowerCase().includes(filtro)
-        ? ""
-        : "none";
+      const corresponde = linha.textContent.toLowerCase().includes(filtro);
+      linha.style.display = corresponde ? "" : "none";
+      if (corresponde) visiveis++;
     });
+
+    atualizarContadorResultados(visiveis, linhas.length);
   });
 }
 
@@ -300,12 +524,12 @@ function pesquisarOS() {
 ========================= */
 
 function abrirDetalhes(id) {
-  localStorage.setItem("osSelecionada", id);
+  localStorage.setItem(STORAGE_KEYS.OS_SELECIONADA, id);
   window.location.href = "detalhes-os.html";
 }
 
 function atualizarStatusOS() {
-  const id = Number(localStorage.getItem("osSelecionada"));
+  const id = Number(localStorage.getItem(STORAGE_KEYS.OS_SELECIONADA));
   const lista = obterOrdens();
 
   const indice = lista.findIndex((os) => os.id === id);
@@ -314,7 +538,7 @@ function atualizarStatusOS() {
 
   const novoStatus = document.getElementById("novoStatus").value;
 
-  if (novoStatus === "Liberado para Oficina") {
+  if (novoStatus === STATUS.LIBERADO) {
     if (
       !confirm(
         "Ao liberar para a oficina, esta OS será retirada das pendências. Confirmar?",
@@ -338,7 +562,7 @@ function atualizarStatusOS() {
 }
 
 function excluirOS() {
-  const id = Number(localStorage.getItem("osSelecionada"));
+  const id = Number(localStorage.getItem(STORAGE_KEYS.OS_SELECIONADA));
 
   if (!confirm("Tem certeza que deseja excluir esta OS?")) return;
 
@@ -436,5 +660,6 @@ function enviarContato(event) {
 window.addEventListener("DOMContentLoaded", function () {
   preencherNovaOS();
   carregarDashboard();
+  carregarAnalises();
   pesquisarOS();
 });
