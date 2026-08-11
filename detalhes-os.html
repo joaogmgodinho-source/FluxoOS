@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FluxoOS - Detalhes</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   </head>
   <body>
     <header>
@@ -64,6 +65,32 @@
           ><button class="danger-btn" onclick="excluirOS()">
             Excluir Ordem
           </button>
+        </div>
+      </div>
+      <div class="box qr-box">
+        <span class="eyebrow">ETIQUETA</span>
+        <h2>QR Code da OS</h2>
+        <p class="qr-hint">
+          Gere o QR Code com os dados desta OS e imprima a etiqueta para
+          colar no caminhão (cliente, placa e o que precisa ser feito).
+        </p>
+        <div class="qr-content">
+          <div id="qrcodeBox" class="qrcode-preview">
+            <span class="qrcode-placeholder">O QR Code aparece aqui</span>
+          </div>
+          <div class="qr-actions">
+            <button class="btn-primary" onclick="gerarQRCode()">
+              Gerar QR Code
+            </button>
+            <button
+              class="secondary-btn"
+              id="btnImprimirEtiqueta"
+              onclick="imprimirEtiquetaOS()"
+              disabled
+            >
+              Imprimir Etiqueta
+            </button>
+          </div>
         </div>
       </div>
       <div class="box">

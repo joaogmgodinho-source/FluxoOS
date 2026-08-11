@@ -637,6 +637,57 @@ tbody tr:hover {
   color: #4b5563;
   margin-top: 10px;
 }
+.qr-box {
+  padding: 25px;
+  margin-bottom: 22px;
+}
+.qr-hint {
+  color: #6b7280;
+  font-size: 13px;
+  margin: 6px 0 18px;
+  max-width: 560px;
+}
+.qr-content {
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.qrcode-preview {
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #d1d5db;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+.qrcode-preview img,
+.qrcode-preview canvas {
+  border-radius: 8px;
+}
+.qrcode-placeholder {
+  color: #9ca3af;
+  font-size: 12px;
+  text-align: center;
+  padding: 0 20px;
+}
+.qr-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 200px;
+}
+.qr-actions .btn-primary,
+.qr-actions .secondary-btn {
+  width: 100%;
+}
+.qr-actions .secondary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .analysis-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

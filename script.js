@@ -612,6 +612,156 @@ function excluirOS() {
 }
 
 /* =========================
+   QR CODE / ETIQUETA
+========================= */
+
+// Escapa texto antes de jogar em innerHTML da janela de impressão
+// (evita que campos com < > & quebrem o HTML da etiqueta).
+function escaparHtml(texto) {
+  const div = document.createElement("div");
+  div.textContent = texto ?? "";
+  return div.innerHTML;
+}
+
+// Monta o conteúdo textual do QR Code: dados do cliente/veículo e o que
+// precisa ser feito, para quem escanear na oficina ver sem precisar do sistema.
+function montarTextoQRCode(os) {
+  return [
+    `OS: ${os.numero}`,
+    `Cliente: ${os.cliente}`,
+    `Responsável: ${os.responsavel}`,
+    `Telefone: ${os.telefone}`,
+    `Placa: ${os.placa}`,
+    `Marca: ${os.marca}`,
+    `Carroceria: ${os.carroceria}`,
+    `Serviço: ${os.servico}`,
+    `Prioridade: ${os.prioridade}`,
+    `Status: ${os.status}`,
+    `Entrada: ${os.dataEntrada}`,
+    `Observações: ${os.observacoes || "-"}`,
+  ].join("\n");
+}
+
+function obterOSAtual() {
+  const id = Number(localStorage.getItem(STORAGE_KEYS.OS_SELECIONADA));
+  return obterOrdens().find((os) => os.id === id);
+}
+
+function gerarQRCode() {
+  const container = document.getElementById("qrcodeBox");
+  if (!container) return;
+
+  if (typeof QRCode === "undefined") {
+    alert(
+      "Biblioteca de QR Code não carregada (verifique a conexão com a internet).",
+    );
+    return;
+  }
+
+  const os = obterOSAtual();
+  if (!os) return;
+
+  container.innerHTML = "";
+
+  new QRCode(container, {
+    text: montarTextoQRCode(os),
+    width: 200,
+    height: 200,
+    correctLevel: QRCode.CorrectLevel.M,
+  });
+
+  const btnImprimir = document.getElementById("btnImprimirEtiqueta");
+  if (btnImprimir) btnImprimir.disabled = false;
+}
+
+// Abre uma janela só com a etiqueta (QR + dados essenciais) e chama a
+// impressão do navegador, pronta para colar no caminhão.
+function imprimirEtiquetaOS() {
+  const container = document.getElementById("qrcodeBox");
+  const elementoQR = container
+    ? container.querySelector("img, canvas")
+    : null;
+
+  if (!elementoQR) {
+    alert("Gere o QR Code antes de imprimir a etiqueta.");
+    return;
+  }
+
+  const os = obterOSAtual();
+  if (!os) return;
+
+  const qrSrc =
+    elementoQR.tagName === "CANVAS"
+      ? elementoQR.toDataURL("image/png")
+      : elementoQR.src;
+
+  const janela = window.open("", "_blank", "width=430,height=640");
+  if (!janela) {
+    alert("O navegador bloqueou a janela de impressão. Permita pop-ups para este site.");
+    return;
+  }
+
+  janela.document.write(`
+    <!doctype html>
+    <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8" />
+        <title>Etiqueta ${escaparHtml(os.numero)}</title>
+        <style>
+          * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; }
+          body { padding: 18px; background: #fff; }
+          .etiqueta {
+            border: 2px solid #1f3a5f;
+            border-radius: 12px;
+            padding: 18px;
+            max-width: 340px;
+            margin: 0 auto;
+            text-align: center;
+          }
+          .etiqueta .marca { font-size: 13px; font-weight: 800; color: #1f3a5f; letter-spacing: 0.08em; }
+          .etiqueta .os-numero { font-size: 24px; font-weight: 800; color: #1f3a5f; margin: 4px 0 12px; }
+          .etiqueta img { width: 190px; height: 190px; }
+          .etiqueta table { width: 100%; text-align: left; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
+          .etiqueta table td { padding: 5px 2px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+          .etiqueta table td:first-child { font-weight: 700; color: #374151; width: 95px; white-space: nowrap; }
+          .etiqueta .obs { text-align: left; font-size: 12px; margin-top: 12px; color: #374151; line-height: 1.5; }
+          .etiqueta .obs b { display: block; margin-bottom: 3px; }
+          @media print {
+            body { padding: 0; }
+            .etiqueta { border: 1px solid #000; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="etiqueta">
+          <div class="marca">FLUXOOS</div>
+          <div class="os-numero">${escaparHtml(os.numero)}</div>
+          <img src="${qrSrc}" alt="QR Code da OS" />
+          <table>
+            <tr><td>Cliente</td><td>${escaparHtml(os.cliente)}</td></tr>
+            <tr><td>Placa</td><td>${escaparHtml(os.placa)}</td></tr>
+            <tr><td>Marca</td><td>${escaparHtml(os.marca)}</td></tr>
+            <tr><td>Carroceria</td><td>${escaparHtml(os.carroceria)}</td></tr>
+            <tr><td>Serviço</td><td>${escaparHtml(os.servico)}</td></tr>
+            <tr><td>Prioridade</td><td>${escaparHtml(os.prioridade)}</td></tr>
+          </table>
+          <div class="obs">
+            <b>O que precisa ser feito:</b>
+            ${escaparHtml(os.observacoes || "-")}
+          </div>
+        </div>
+        <script>
+          window.onload = function () {
+            window.print();
+          };
+        <\/script>
+      </body>
+    </html>
+  `);
+  janela.document.close();
+}
+
+/* =========================
    EXPORTAR PENDÊNCIAS
 ========================= */
 
